@@ -41,7 +41,7 @@ public:
     // Разыменование
     T& operator*() { return *ptr; }
     T* operator->() { return ptr; }
-
+    const T* operator->() const { return ptr; }
     // Сброс указателя
     void reset(T* p = nullptr) {
         if (--(*ref_count) == 0) {
