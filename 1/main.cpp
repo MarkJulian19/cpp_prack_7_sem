@@ -1,17 +1,9 @@
 #include <iostream>
-#include <vector>
-#include <string>
-
 #include <fstream>
 #include <random>
 #include <concepts>
-#include <coroutine>
-#include <utility> // Для std::swap
-#include <map>
 #include <thread>
 #include <future>
-#include "src/logger.cpp"
-#include "src/smart_pointer.cpp"
 #include "src/gamers.cpp"
 #include <ranges>
 
@@ -207,19 +199,17 @@ void nightPhase(std::map<int, SmartPointer<Player>>& alivePlayers, Logger& logge
 
     // Действие Дона
     //Не вызываем действия дона, если игрок и есть Дон
-    if (donId != -1 && (alivePlayers[userId].get()->role() != "Дон мафии" || userId != donId)) {
+    if (donId != -1 && (userId != donId)) {
         futures.push_back(std::async(std::launch::async, [&]() {
             PlayerAction action = alivePlayers[donId].get()->act(alivePlayers, donId, logger, round, false);
             action.handle.resume();
         }));
     }
-
     // Ждем завершения действия Дона
     for (auto& future : futures) {
         future.get();
     }
     futures.clear();
-
     // Обработка выбора жертв
     if(donId != -1){
         Mafia* donMafiaPlayer = dynamic_cast<Mafia*>(alivePlayers[donId].get());

@@ -1,4 +1,9 @@
 #include <set>
+#include <coroutine>
+#include <vector>
+#include <map>
+#include "smart_pointer.cpp"
+#include "logger.cpp"
 // Функция для случайного выбора из нескольких кандидатов
 template <typename T>
 T choose_random(const std::vector<T>& candidates) {
@@ -110,7 +115,6 @@ public:
         else {
             // Дон мафии собирает цели мафиози
             std::map<int, int> targetCount;  // Счетчик для каждого игрока-цели
-
             for (const auto& [targetId, targetPlayer] : alivePlayers) {
                 if (targetPlayer->role() == "Мафия" || targetPlayer->role() == "Дон мафии") {
                     Mafia* mafiaPlayer = dynamic_cast<Mafia*>(targetPlayer.get());
