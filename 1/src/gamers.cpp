@@ -289,12 +289,12 @@ public:
     }
 };
 // Концепт для определения необходимых методов игрока
-template<typename T>
-concept PlayerConcept = requires(T player) {
-    { player.role() } -> std::convertible_to<std::string>;
-    { player.act(std::declval<std::map<int, SmartPointer<Player>>&, int, Logger&, int, bool>()) } -> std::same_as<PlayerAction>;
-    { player.vote(std::declval<std::map<int, SmartPointer<Player>>&, int, Logger&, int>()) } -> std::same_as<PlayerAction>;
-    { player.setTarget(std::declval<int>()) };
-    { player.getTarget() } -> std::convertible_to<int>;
-    { player.setKill(std::declval<int>()) };
-};
+// template<typename T>
+// concept PlayerConcept = requires(T player) {
+//     { player.role() } -> std::convertible_to<std::string>;
+//     { player.act(std::declval<std::map<int, SmartPointer<Player>>&, int, Logger&, int, bool>()) } -> std::same_as<PlayerAction>;
+//     { player.vote(std::declval<std::map<int, SmartPointer<Player>>&, int, Logger&, int>()) } -> std::same_as<PlayerAction>;
+//     { player.setTarget(std::declval<int>()) };
+//     { player.getTarget() } -> std::convertible_to<int>;
+//     { player.setKill(std::declval<int>()) };
+// };
