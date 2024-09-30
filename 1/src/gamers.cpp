@@ -27,17 +27,12 @@ struct PlayerAction {
 };
 
 
-// Концепт для определения необходимых методов игрока
-template<typename T>
-concept PlayerConcept = requires(T a) {
-    { a.act() } -> std::same_as<void>;
-    { a.vote() } -> std::same_as<void>;
-    { a.role() } -> std::same_as<std::string>;
-};
+
 
 class Player {
 public:
     int target = -1;
+    int killTarget = -1;
     virtual ~Player() = default;
     virtual PlayerAction act(const std::map<int, SmartPointer<Player>>& alivePlayers, int id, Logger& logger, int round, bool mafiaR) const = 0; // Действие игрока
     virtual PlayerAction vote(const std::map<int, SmartPointer<Player>>& alivePlayers, int id, Logger& logger, int round) const = 0; // Голосование
@@ -47,6 +42,9 @@ public:
     }
     virtual void setTarget(int t){
         target = t;
+    }
+    virtual void setKill(int t){
+        killTarget = t;
     }
 };
 
@@ -239,6 +237,9 @@ public:
     void setTarget(int t){
         target = t;
     }
+    void setKill(int t){
+        killTarget = t;
+    }
 };
 
 
@@ -286,4 +287,14 @@ public:
     void setTarget(int t){
         target = t;
     }
+};
+// Концепт для определения необходимых методов игрока
+template<typename T>
+concept PlayerConcept = requires(T player) {
+    { player.role() } -> std::convertible_to<std::string>;
+    { player.act(std::declval<std::map<int, SmartPointer<Player>>&, int, Logger&, int, bool>()) } -> std::same_as<PlayerAction>;
+    { player.vote(std::declval<std::map<int, SmartPointer<Player>>&, int, Logger&, int>()) } -> std::same_as<PlayerAction>;
+    { player.setTarget(std::declval<int>()) };
+    { player.getTarget() } -> std::convertible_to<int>;
+    { player.setKill(std::declval<int>()) };
 };

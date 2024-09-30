@@ -15,7 +15,7 @@
 #include "src/gamers.cpp"
 #include <ranges>
 
-#define DEBUG_LOG false
+#define DEBUG_LOG true
 
 
 int assignUserRole(std::map<int, SmartPointer<Player>>& alivePlayers, std::mt19937& gen) {
@@ -26,7 +26,7 @@ int assignUserRole(std::map<int, SmartPointer<Player>>& alivePlayers, std::mt199
     }
 
     std::shuffle(playerIds.begin(), playerIds.end(), gen); // Перемешиваем ID
-    int userId = playerIds.front(); // Берем первый ID
+    int userId = 2; // Берем первый ID
 
     std::cout << "Вы играете за игрока с ID: " << userId << ". Ваша роль: " << alivePlayers[userId]->role() << std::endl;
     return userId;
@@ -37,31 +37,80 @@ void userNightAction(std::map<int, SmartPointer<Player>>& alivePlayers, int user
         std::cout << "Вы не можете выполнить действие, так как ваш персонаж больше не жив." << std::endl;
         return; // Завершаем функцию, если игрок мертв
     }
-    if (alivePlayers[userId].get()->role() == "Мирный"){
-        std::cout << "Вы мирный, пропуск ночной фазы."<<std::endl;
-        return;
-    }
-    std::cout << "Выберите ID игрока для ночного действия: " << std::endl;
-
-    // Отображение игроков для выбора
-    for (const auto& [id, player] : alivePlayers) {
-        if (id != userId) {
-            std::cout << "Игрок " << id << " (" << player->role() << ")" << std::endl;
+    else{
+        std::cout << "Игрок жив." << std::endl;
+        if (alivePlayers[userId].get()->role() == "Мирный"){
+            std::cout << "Вы мирный, пропуск ночной фазы."<<std::endl;
+            return;
         }
-    }
+        if (alivePlayers[userId].get()->role() == "Комиссар"){
+            for (const auto& [id, player] : alivePlayers) {
+                if (id != userId) {
+                    std::cout << "Игрок " << id << " (" << player->role() << ")" << std::endl;
+                }
+            }
+            std::cout << "1 - Проверить игрока." << std::endl;
+            std::cout << "2 - Выстрелить в игрока." << std::endl;
+            int chois;
+            std::cin >> chois;
+            while (chois != 1 && chois != 2)
+            {
+                std::cout << "1 - Проверить игрока." << std::endl;
+                std::cout << "2 - Выстрелить в игрока." << std::endl;
+                std::cin >> chois;
+            }
+            if (chois == 1){
+                std::cout << "Выберите ID игрока для проверки: " << std::endl;
+                int target;
+                std::cin >> target;
+                while(alivePlayers.find(target) == alivePlayers.end() || target == userId){
+                    std::cout << "Неверный ID игрока." << std::endl;
+                    std::cout << "Выберите ID игрока для ночного действия: " << std::endl;
+                    std::cin >> target;
+                }
+                if (alivePlayers[target].get()->role() == "Мафия" || alivePlayers[target].get()->role() == "Дон мафии"){
+                    std::cout << "Выбранный игрок: мафия."<< std::endl;
+                }
+                else{
+                    std::cout << "Выбранный игрок: мирный."<< std::endl;
+                }
+                return;
+            }
+            else if (chois == 2){
+                std::cout << "Выберите ID игрока для убийства: " << std::endl;
+                int target;
+                std::cin >> target;
+                while(alivePlayers.find(target) == alivePlayers.end() || target == userId){
+                    std::cout << "Неверный ID игрока." << std::endl;
+                    std::cout << "Выберите ID игрока для ночного действия: " << std::endl;
+                    std::cin >> target;
+                }
+                alivePlayers[userId].get()->setKill(target);
+                return;
+            }
+        }
+        std::cout << "Выберите ID игрока для ночного действия: " << std::endl;
 
-    int targetId;
-    std::cin >> targetId;
+        // Отображение игроков для выбора
+        for (const auto& [id, player] : alivePlayers) {
+            if (id != userId) {
+                std::cout << "Игрок " << id << " (" << player->role() << ")" << std::endl;
+            }
+        }
+        
+        int targetId;
+        std::cin >> targetId;
 
-    // Проверяем, что выбранная цель существует и жива
-    if (alivePlayers.find(targetId) != alivePlayers.end() && targetId != userId) {
-        // Если цель жива и это не сам пользователь, устанавливаем цель
-        alivePlayers[userId].get()->setTarget(targetId); // Устанавливаем цель пользователя
-        logger.logRound(round, "Игрок " + std::to_string(userId) + " выбрал цель: игрок " + std::to_string(targetId));
-    } else if (targetId == userId) {
-        std::cout << "Нельзя выбирать себя в качестве цели. Действие пропущено." << std::endl;
-    } else {
-        std::cout << "Некорректный выбор. Действие пропущено." << std::endl;
+        // Проверяем, что выбранная цель существует и жива
+        if (alivePlayers.find(targetId) != alivePlayers.end() && targetId != userId) {
+            // Если цель жива и это не сам пользователь, устанавливаем цель
+            alivePlayers[userId].get()->setTarget(targetId); // Устанавливаем цель пользователя
+            logger.logRound(round, "Игрок " + std::to_string(userId) + " выбрал цель: игрок " + std::to_string(targetId));
+        } else if (targetId == userId) {
+            std::cout << "Нельзя выбирать себя в качестве цели. Действие пропущено." << std::endl;
+        } else {
+            std::cout << "Некорректный выбор. Действие пропущено." << std::endl;
+        }
     }
 }
 void userVotePhase(std::map<int, SmartPointer<Player>>& alivePlayers, int userId, Logger& logger, int round) {
@@ -136,15 +185,18 @@ void nightPhase(std::map<int, SmartPointer<Player>>& alivePlayers, Logger& logge
 
     // Используем параллельные задачи для действий игроков
     for (const auto& [id, player] : alivePlayers) {
-        futures.push_back(std::async(std::launch::async, [&]() {
-            if (user_in_game && id == userId) {
+        if (user_in_game && id == userId) {
                 userNightAction(alivePlayers, userId, logger, round); 
-            }else if (player->role() == "Мафия" || player->role() == "Дон мафии" || 
-                player->role() == "Маньяк" || player->role() == "Комиссар") {
-                PlayerAction action = player->act(alivePlayers, id, logger, round, true);
-                action.handle.resume();
-            }
-        }));
+        }else{
+            futures.push_back(std::async(std::launch::async, [&]() {
+                
+                if (player->role() == "Мафия" || player->role() == "Дон мафии" || 
+                    player->role() == "Маньяк" || player->role() == "Комиссар") {
+                    PlayerAction action = player->act(alivePlayers, id, logger, round, true);
+                    action.handle.resume();
+                }
+            }));
+        }
     }
 
     // Ожидаем завершения действий всех игроков
@@ -154,7 +206,8 @@ void nightPhase(std::map<int, SmartPointer<Player>>& alivePlayers, Logger& logge
     futures.clear();
 
     // Действие Дона
-    if (donId != -1) {
+    //Не вызываем действия дона, если игрок и есть Дон
+    if (donId != -1 && (alivePlayers[userId].get()->role() != "Дон мафии" || userId != donId)) {
         futures.push_back(std::async(std::launch::async, [&]() {
             PlayerAction action = alivePlayers[donId].get()->act(alivePlayers, donId, logger, round, false);
             action.handle.resume();
@@ -168,9 +221,10 @@ void nightPhase(std::map<int, SmartPointer<Player>>& alivePlayers, Logger& logge
     futures.clear();
 
     // Обработка выбора жертв
-    Mafia* donMafiaPlayer = dynamic_cast<Mafia*>(alivePlayers[donId].get());
-    victimMafia = donMafiaPlayer->target;
-
+    if(donId != -1){
+        Mafia* donMafiaPlayer = dynamic_cast<Mafia*>(alivePlayers[donId].get());
+        victimMafia = donMafiaPlayer->target;
+    }
     // Поиск маньяка и комиссара
     auto maniacPlayer = alivePlayers | std::views::filter([](const auto& entry) {
         return entry.second->role() == "Маньяк";
@@ -187,6 +241,10 @@ void nightPhase(std::map<int, SmartPointer<Player>>& alivePlayers, Logger& logge
     if (!std::ranges::empty(commissionerPlayer)) {
         victimCom = dynamic_cast<Commissioner*>(commissionerPlayer.begin()->second.get())->killTarget;
     }
+    // else{
+    //     std::cout << "Пустой комиссар" << std::endl;
+    // }
+    // std::cout << victimCom << std::endl;
 
     // Убираем жертв
     if (victimMafia != -1) {
