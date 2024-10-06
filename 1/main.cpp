@@ -209,7 +209,7 @@ void nightPhase(std::map<int, SmartPointer<Player>>& alivePlayers, Logger& logge
     for (auto& future : futures) {
         future.get();
     }
-    futures.clear();
+    // futures.clear();
     // Обработка выбора жертв
     if(donId != -1){
         Mafia* donMafiaPlayer = dynamic_cast<Mafia*>(alivePlayers[donId].get());
