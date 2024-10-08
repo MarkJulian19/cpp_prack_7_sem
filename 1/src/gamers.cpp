@@ -45,6 +45,7 @@ class Player {
 public:
     int target = -1;
     int killTarget = -1;
+    int previousTarget = -1;
     virtual ~Player() = default;
     virtual PlayerAction act(const std::map<int, SmartPointer<Player>>& alivePlayers, int id, Logger& logger, int round, bool mafiaR) const = 0; // Действие игрока
     virtual PlayerAction vote(const std::map<int, SmartPointer<Player>>& alivePlayers, int id, Logger& logger, int round) const = 0; // Голосование
@@ -57,6 +58,12 @@ public:
     }
     virtual void setKill(int t){
         killTarget = t;
+    }
+    virtual int getPrevTarget() const{
+        return -1;
+    }
+    virtual void setPrevTarget(int t){
+        previousTarget = t;
     }
 };
 
@@ -297,6 +304,58 @@ public:
     }
     void setTarget(int t){
         target = t;
+    }
+};
+class Doctor : public Player {
+public:
+    mutable int previousTarget = -1;
+    mutable int target = -1;
+
+    PlayerAction act(const std::map<int, SmartPointer<Player>>& alivePlayers, int id, Logger& logger, int round, bool mafiaR) const override {
+        std::vector<int> targets;
+        for (const auto& [targetId, targetPlayer] : alivePlayers) {
+            if (targetId != previousTarget) {
+                targets.push_back(targetId);
+            }
+        }
+
+        if (!targets.empty()) {
+            int chosenTarget = choose_random(targets);
+            const_cast<Doctor*>(this)->target = chosenTarget;
+            const_cast<Doctor*>(this)->previousTarget = chosenTarget;
+            logger.logRound(round, "Доктор " + std::to_string(id) + " лечит игрока " + std::to_string(chosenTarget) + ".");
+        } else {
+            const_cast<Doctor*>(this)->target = -1;
+            logger.logRound(round, "Доктор " + std::to_string(id) + " не нашел, кого лечить и пропускает ход.");
+        }
+
+        co_return;
+    }
+
+    PlayerAction vote(const std::map<int, SmartPointer<Player>>& alivePlayers, int id, Logger& logger, int round) const override {
+        int chosenTarget = -1;
+        std::vector<int> targets;
+        for (const auto& [targetId, targetPlayer] : alivePlayers) {
+            targets.push_back(targetId);
+        }
+        chosenTarget = choose_random(targets);
+        const_cast<Doctor*>(this)->target = chosenTarget;
+        logger.logRound(round, "Доктор " + std::to_string(id) + " выбрал игрока " + std::to_string(target) + " на голосовании.");
+        co_return;
+    }
+
+    std::string role() const override { return "Доктор"; }
+    int getTarget() const override {
+        return target;
+    }
+    void setTarget(int t) {
+        target = t;
+    }
+    int getPrevTarget() const {
+        return previousTarget;
+    }
+    void setPrevTarget(int t){
+        previousTarget = t;
     }
 };
 // Концепт для определения необходимых методов игрока
