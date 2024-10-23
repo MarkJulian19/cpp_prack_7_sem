@@ -253,10 +253,7 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
 INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/tfm/lh/lh-t2a/labx1000.tfm
-INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/tfm/lh/lh-t2a/larm0700.tfm
-INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/tfm/lh/lh-t2a/larm0500.tfm
 INPUT main.aux
-INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/larm0700.600pk
 INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/labx1000.600pk
 INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk
 INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/labx1200.600pk
@@ -264,8 +261,8 @@ INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/labx14
 INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/larm1000.600pk
 INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/larm1200.600pk
 INPUT /home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/labx1728.600pk
-INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
