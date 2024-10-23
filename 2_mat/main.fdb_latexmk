@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1729714234 "/home/ubuntu_admin/cpp_prack_7_sem/2_mat/main.tex" "main.pdf" "main" 1729714234
+["pdflatex"] 1729714294 "/home/ubuntu_admin/cpp_prack_7_sem/2_mat/main.tex" "main.pdf" "main" 1729714294
   "/etc/texmf/web2c/texmf.cnf" 1729695471 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk" 1729700838 11524 8850e11cc39a979c124755ed626d2977 ""
   "/home/ubuntu_admin/.texlive2021/texmf-var/fonts/pk/ljfour/lh/lh-t2a/labx1000.600pk" 1729700837 23444 01baf39e926297cdf3da7867f5abdae5 ""
@@ -16,7 +16,7 @@
   "/home/ubuntu_admin/.texlive2021/texmf-var/fonts/tfm/lh/lh-t2a/larm1200.tfm" 1729699878 3240 c2435f2b5cd66d4930bc29b8df87967e ""
   "/home/ubuntu_admin/.texlive2021/texmf-var/fonts/tfm/lh/lh-t2a/larm1440.tfm" 1729699879 3256 3daaa33cf35cf3f354983aa3214ecd7f ""
   "/home/ubuntu_admin/.texlive2021/texmf-var/fonts/tfm/lh/lh-t2a/larm1728.tfm" 1729699880 3252 92d08740ce00199d6cf9ff4aaada81d1 ""
-  "/home/ubuntu_admin/cpp_prack_7_sem/2_mat/main.tex" 1729714234 4888 c954156496ffc7df12379cc4d5bfcdf3 ""
+  "/home/ubuntu_admin/cpp_prack_7_sem/2_mat/main.tex" 1729714293 4887 65e754e25a34b7176405ce39e9f32370 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -72,8 +72,8 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1729695835 167470 33f10313cc2bf91fb22ded8d87a7e0d7 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1729695841 1510984 001d5c87a995c1b34e89342f878558b3 ""
-  "main.aux" 1729714234 132 dbefece5cb2935baa713ec3017e95ed6 "pdflatex"
-  "main.tex" 1729714234 4888 c954156496ffc7df12379cc4d5bfcdf3 ""
+  "main.aux" 1729714294 132 dbefece5cb2935baa713ec3017e95ed6 "pdflatex"
+  "main.tex" 1729714293 4887 65e754e25a34b7176405ce39e9f32370 ""
   (generated)
   "main.aux"
   "main.log"
