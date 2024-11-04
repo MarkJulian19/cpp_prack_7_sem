@@ -289,7 +289,7 @@ int main()
         // Загружаем длительности работ из CSV файла
         std::vector<int> jobDurations = loadJobDurationsFromCSV("jobs.csv");
         int numJobs = jobDurations.size();
-        int numProcessors = 8;
+        int numProcessors = 20;
 
         SchedulingSolution solution(numJobs, numProcessors, jobDurations);
         SchedulingMutation mutationOperation;
@@ -297,7 +297,7 @@ int main()
 
         double initialTemperature = 100.0;
         int maxIterations = 100000000;
-        int maxNoImprovementCount = 100000000;
+        int maxNoImprovementCount = 10000000;
         SimulatedAnnealing sa(&solution, &mutationOperation, &coolingSchedule, initialTemperature, maxIterations, maxNoImprovementCount);
         sa.run(); // Запуск алгоритма имитации отжига
     }
