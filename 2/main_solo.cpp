@@ -256,66 +256,7 @@ private:
     int maxNoImprovementCount;            // Условие останова или максимально число иттераций без улучшений
 };
 
-// std::vector<int> loadJobDurationsFromCSV(const std::string &filename)
-// {
-//     std::vector<int> jobDurations;
-//     std::ifstream file(filename);
-//     if (!file.is_open())
-//     {
-//         throw std::runtime_error("Unable to open file " + filename);
-//     }
 
-//     std::string line;
-//     bool isHeader = true;
-//     while (std::getline(file, line))
-//     {
-//         if (isHeader)
-//         {
-//             // Пропускаем заголовок
-//             isHeader = false;
-//             continue;
-//         }
-//         std::stringstream ss(line);
-//         std::string jobId;
-//         std::string durationStr;
-
-//         std::getline(ss, jobId, ',');
-//         std::getline(ss, durationStr, ',');
-
-//         int duration = std::stoi(durationStr);
-//         jobDurations.push_back(duration);
-//     }
-
-//     file.close();
-//     return jobDurations;
-// }
-
-// int main()
-// {
-//     try
-//     {
-//         // Загружаем длительности работ из CSV файла
-//         std::vector<int> jobDurations = loadJobDurationsFromCSV("jobs.csv");
-//         int numJobs = jobDurations.size();
-//         int numProcessors = 20;
-
-//         SchedulingSolution solution(numJobs, numProcessors, jobDurations);
-//         SchedulingMutation mutationOperation;
-//         LogarithmicCooling coolingSchedule(100.0); // Используем логарифмическое понижение температуры
-
-//         double initialTemperature = 100.0;
-//         int maxIterations = 100000000;
-//         int maxNoImprovementCount = 100;
-//         SimulatedAnnealing sa(&solution, &mutationOperation, &coolingSchedule, initialTemperature, maxIterations, maxNoImprovementCount);
-//         sa.run(); // Запуск алгоритма имитации отжига
-//     }
-//     catch (const std::exception &e)
-//     {
-//         std::cerr << "Error: " << e.what() << std::endl;
-//     }
-
-//     return 0;
-// }
 std::vector<uint8_t> loadJobDurationsFromCSV(const std::string &filename)
 {
     std::vector<uint8_t> jobDurations;
