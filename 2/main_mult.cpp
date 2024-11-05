@@ -17,6 +17,7 @@ public:
     virtual double getCost() const = 0;
     virtual void print() const = 0;
     virtual std::shared_ptr<Solution> cloneWithNewSeed(unsigned int seed) const = 0;
+    virtual std::shared_ptr<Solution> clone() const = 0;
 };
 
 std::shared_ptr<Solution> globalBestSolution;
@@ -29,11 +30,11 @@ public:
 
 class SchedulingSolution : public Solution {
 public:
-    SchedulingSolution(int numJobs, int numProcessors, const std::vector<int> &jobDurations, unsigned int seed)
+    SchedulingSolution(int numJobs, int numProcessors, const std::vector<uint8_t> &jobDurations, unsigned int seed)
         : numJobs(numJobs), numProcessors(numProcessors), jobDurations(jobDurations), distribution(0, numProcessors - 1) {
         rng.seed(seed);
 
-        schedule.assign(numJobs, std::vector<int>(numProcessors, 0));
+        schedule.assign(numJobs, std::vector<uint8_t>(numProcessors, 0));
         processorLoads.resize(numProcessors, 0);
         for (int i = 0; i < numJobs; ++i) {
             int processor = distribution(rng);
@@ -60,6 +61,10 @@ public:
         return cloned;
     }
 
+    std::shared_ptr<Solution> clone() const override { // Реализация метода clone()
+        return std::make_shared<SchedulingSolution>(*this);
+    }
+
     void updateSchedule(int jobIndex, int oldProcessor, int newProcessor) {
         schedule[jobIndex][oldProcessor] = 0;
         schedule[jobIndex][newProcessor] = 1;
@@ -84,8 +89,8 @@ public:
 private:
     int numJobs;
     int numProcessors;
-    std::vector<int> jobDurations;
-    std::vector<std::vector<int>> schedule;
+    std::vector<uint8_t> jobDurations;
+    std::vector<std::vector<uint8_t>> schedule;
     std::vector<int> processorLoads;
     mutable std::mt19937 rng;
     std::uniform_int_distribution<int> distribution;
@@ -115,57 +120,81 @@ public:
     virtual double getNextTemperature(double currentTemperature, int iteration) const = 0;
 };
 
-class LogarithmicCooling : public CoolingSchedule {
+class BoltzmannCooling : public CoolingSchedule
+{
 public:
-    LogarithmicCooling(double initialTemperature) : initialTemperature(initialTemperature) {}
+    BoltzmannCooling(double initialTemperature) : initialTemperature(initialTemperature) {}
 
-    double getNextTemperature(double currentTemperature, int iteration) const override {
-        return initialTemperature * std::log(1 + iteration + 1) / (1 + iteration);
+    double getNextTemperature(double currentTemperature, int iteration) const override
+    {
+        return initialTemperature / std::log(1 + iteration + 1); // Температура уменьшается по закону Больцмана
     }
 
 private:
-    double initialTemperature;
+    double initialTemperature; // Начальная температура
 };
 
 class ParallelSimulatedAnnealing {
 public:
-    ParallelSimulatedAnnealing(Solution *solution, MutationOperation *mutationOperation, CoolingSchedule *coolingSchedule, double initialTemperature, int maxIterations, int threadID, unsigned int seed)
-        : solution(solution->cloneWithNewSeed(seed)), mutationOperation(mutationOperation), coolingSchedule(coolingSchedule), temperature(initialTemperature), maxIterations(maxIterations), threadID(threadID) {}
+    ParallelSimulatedAnnealing(Solution *solution, MutationOperation *mutationOperation, CoolingSchedule *coolingSchedule, double initialTemperature, int maxNoImprovementCount, int threadID, unsigned int seed)
+        : initialSolution(solution->cloneWithNewSeed(seed)), mutationOperation(mutationOperation), coolingSchedule(coolingSchedule), temperature(initialTemperature),  maxNoImprovementCount(maxNoImprovementCount), threadID(threadID), rng(seed) {}
 
     void run() {
         int iteration = 0;
-        double bestCost = solution->getCost();
-        auto bestSolution = solution->cloneWithNewSeed(std::chrono::system_clock::now().time_since_epoch().count());
+        double bestCost = initialSolution->getCost(); // Изначальная стоимость решения
+        auto bestSolution = initialSolution->clone(); // Копия наилучшего решения
+        int noImprovementCount = 0;                   // Счетчик количества итераций без улучшения
+        // std::uniform_real_distribution<double> realDist(0.0, 1.0);
 
-        while (iteration < maxIterations) {
-            mutationOperation->mutate(*solution);
-            double currentCost = solution->getCost();
+        while (noImprovementCount < maxNoImprovementCount) {
+            // Клонируем лучшее решение и применяем к нему мутацию
+            auto currentSolution = bestSolution->clone();
+            mutationOperation->mutate(*currentSolution);
+            double currentCost = currentSolution->getCost(); // Стоимость мутированного решения
 
             if (currentCost < bestCost) {
+                // Если новое решение лучше, обновляем наилучшее решение
                 bestCost = currentCost;
-                bestSolution = solution->cloneWithNewSeed(std::chrono::system_clock::now().time_since_epoch().count());
+                noImprovementCount = 0;
+                bestSolution = currentSolution;
+            } else {
+                // Если решение хуже, то принимаем его с некоторой вероятностью (правило Метрополиса)
+                double acceptanceProbability = std::exp(-(currentCost - bestCost) / temperature);
+                if (acceptanceProbability >= static_cast<double>(rand()) / RAND_MAX) {
+                    // Принять ухудшающее решение и обновить лучшее решение
+                    noImprovementCount = 0;
+                    bestSolution = currentSolution;
+                } else {
+                    // Если решение не принято, увеличиваем счетчик итераций без улучшений
+                    noImprovementCount++;
+                }
             }
+            // Обновляем температуру согласно закону понижения температуры
             temperature = coolingSchedule->getNextTemperature(temperature, iteration);
             iteration++;
         }
+        // Сохраняем локально лучшее решение
+        localBestSolution = bestSolution;
+    }
 
-        std::lock_guard<std::mutex> lock(globalMutex);
-        if (!globalBestSolution || bestSolution->getCost() < globalBestSolution->getCost()) {
-            globalBestSolution = bestSolution;
-        }
+    std::shared_ptr<Solution> getLocalBestSolution() const {
+        return localBestSolution;
     }
 
 private:
-    std::shared_ptr<Solution> solution;
+    std::shared_ptr<Solution> initialSolution;
+    std::shared_ptr<Solution> localBestSolution;
     MutationOperation *mutationOperation;
     CoolingSchedule *coolingSchedule;
     double temperature;
     int maxIterations;
+    int maxNoImprovementCount;
     int threadID;
+    std::mt19937 rng;
 };
 
-std::vector<int> loadJobDurationsFromCSV(const std::string &filename) {
-    std::vector<int> jobDurations;
+std::vector<uint8_t> loadJobDurationsFromCSV(const std::string &filename) {
+    std::vector<uint8_t> jobDurations;
     std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("Unable to open file " + filename);
@@ -185,7 +214,7 @@ std::vector<int> loadJobDurationsFromCSV(const std::string &filename) {
         std::getline(ss, jobId, ',');
         std::getline(ss, durationStr, ',');
 
-        int duration = std::stoi(durationStr);
+        uint8_t duration = std::stoi(durationStr);
         jobDurations.push_back(duration);
     }
 
@@ -193,38 +222,51 @@ std::vector<int> loadJobDurationsFromCSV(const std::string &filename) {
     return jobDurations;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     try {
-        std::vector<int> jobDurations = loadJobDurationsFromCSV("jobs.csv");
+        if (argc != 2) {
+            std::cerr << "Usage: " << argv[0] << " <numThreads>" << std::endl;
+            return 1;
+        }
+
+        int numThreads = std::stoi(argv[1]);
+        std::vector<uint8_t> jobDurations = loadJobDurationsFromCSV("jobs.csv");
         int numJobs = jobDurations.size();
-        int numProcessors = 8;
-        int numThreads = 14;
-        int numIterations = 20;
+        int numProcessors = 40;
+        int maxNoImprovementCount = 100;
+        int maxGlobalNoImprovementCount = 10;
 
         SchedulingMutation mutationOperation;
-        LogarithmicCooling coolingSchedule(100.0);
+        BoltzmannCooling coolingSchedule(100.0);
         double initialTemperature = 100.0;
-        int maxIterations = 100;
 
-        for (int iter = 0; iter < numIterations; ++iter) {
+        int globalNoImprovementCount = 0;
+
+        {
+            std::lock_guard<std::mutex> lock(globalMutex);
+            if (!globalBestSolution) {
+                globalBestSolution = std::make_shared<SchedulingSolution>(numJobs, numProcessors, jobDurations, std::chrono::system_clock::now().time_since_epoch().count());
+            }
+        }
+
+        while (globalNoImprovementCount < maxGlobalNoImprovementCount) {
             std::vector<std::thread> threads;
+            std::vector<std::shared_ptr<Solution>> localBestSolutions(numThreads);
 
             for (int i = 0; i < numThreads; ++i) {
                 threads.emplace_back([&, i]() {
                     unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count() + i;
                     std::shared_ptr<Solution> initialSolution;
-                    
+
                     {
                         std::lock_guard<std::mutex> lock(globalMutex);
-                        if (globalBestSolution) {
-                            initialSolution = globalBestSolution->cloneWithNewSeed(seed);
-                        } else {
-                            initialSolution = std::make_shared<SchedulingSolution>(numJobs, numProcessors, jobDurations, seed);
-                        }
+                        initialSolution = globalBestSolution->cloneWithNewSeed(seed);
                     }
 
-                    ParallelSimulatedAnnealing sa(initialSolution.get(), &mutationOperation, &coolingSchedule, initialTemperature, maxIterations, i, seed);
+                    ParallelSimulatedAnnealing sa(initialSolution.get(), &mutationOperation, &coolingSchedule, initialTemperature, maxNoImprovementCount, i, seed);
                     sa.run();
+
+                    localBestSolutions[i] = sa.getLocalBestSolution();
                 });
             }
 
@@ -232,11 +274,25 @@ int main() {
                 t.join();
             }
 
-            if (globalBestSolution) {
-                std::cout << "Iteration " << iter + 1 << ": Best solution found with cost: " << globalBestSolution->getCost() << std::endl;
-                globalBestSolution->print();
+            bool improved = false;
+            for (const auto &localBest : localBestSolutions) {
+                if (localBest->getCost() < globalBestSolution->getCost()) {
+                    std::lock_guard<std::mutex> lock(globalMutex);
+                    globalBestSolution = localBest;
+                    // std::cout << "Found Improved Solution" << std::endl;
+                    improved = true;
+                }
             }
+            // std::cout << "Improved: " << improved << std::endl;
+            if (improved) {
+                globalNoImprovementCount = 0;
+            } else {
+                globalNoImprovementCount++;
+            }
+
+            // std::cout << "Current best solution cost: " << globalBestSolution->getCost() << std::endl;
         }
+        std::cout << "Current best solution cost: " << globalBestSolution->getCost() << std::endl;
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }

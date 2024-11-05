@@ -7,6 +7,7 @@
 \usepackage{titlesec}
 \usepackage{indentfirst}
 \usepackage{lipsum}
+\usepackage{graphicx}
 
 % Устанавливаем поля страницы
 \geometry{a4paper, margin=1in}
@@ -81,8 +82,81 @@
         \item Каждый процессор $p_j \in P$ в любой момент времени может выполнять не более одного задания.
         \item Во время выполнения задания процессором, не возникает прерываний.
         \item Процессор может мгновенно (без прерывания) переключаться между заданиями.
-        \item Каждое задание $j_i \in J$ должно быть выполнено только один раз и только на одном процессоре.
+        \item Каждая строка $S_i$ матрицы $S^{N \times M}$ должна содержать не более одной единицы. (Каждая задача выполняется только на одном процессоре и только один раз)
         \item Время выполнения $t_i \in \tau$ фиксировано.
     \end{itemize}
+\newpage
+\section*{Исследование последовательного алгоритма}
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boltzmann_cooling_heatmap_execution_time.png}
+        %\caption{Время выполнения алгоритма с охлаждением Больцмана}
+        \label{fig:image1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{boltzmann_cooling_heatmap_final_cost.png}
+        %\caption{Значения метрик алгоритма Болцмана}
+        \label{fig:image2}
+    \end{minipage}
+    \vspace{-50pt} % Уменьшаем пространство между блоками
+\end{figure}
 
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{cauchy_cooling_heatmap_execution_time.png}
+        %\caption{Время выполнения алгоритма с охлаждением Коши}
+        \label{fig:image3}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{cauchy_cooling_heatmap_final_cost.png}
+        %\caption{Значения метрик алгоритма Коши}
+        \label{fig:image4}
+    \end{minipage}
+    \vspace{-50pt} % Уменьшаем пространство между блоками
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logarithmic_cooling_heatmap_execution_time.png}
+        %\caption{Время выполнения алгоритма с логарифмическим охлаждением}
+        \label{fig:image5}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{logarithmic_cooling_heatmap_final_cost.png}
+        %\caption{Значения метрик алгоритма с логарифмическим охлаждением}
+        \label{fig:image6}
+    \end{minipage}
+    %\vspace{-50pt} % Уменьшаем пространство между блоками
+\end{figure}
+Тепловые карты представляют собой средние значения, полученные в результате пяти запусков последовательной программы.
+
+На основании проведенных исследований можно сделать вывод, что алгоритм понижения температуры на основе модели Больцмана 
+демонстрировал самое длительное время выполнения по сравнению с другими алгоритмами. Тем не менее, это не отразилось на 
+точности вычислений. Все алгоритмы показали сопоставимые результаты с учетом допустимой погрешности.
+
+Кроме того, можно отметить закономерность: с увеличением количества процессоров и уменьшением количества задач точность 
+вычислений возрастает. Это может свидетельствовать о том, что алгоритм имитации отжига сталкивается с большей сложностью 
+при распределении значительного объема заданий на меньшее количество процессоров. При увеличении данных стоит увеличивать
+и кнритерий останова, для достижения лучших результатов.
+\section*{Исследование последовательного алгоритма}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{metrics_plot.png}
+    %\caption{Описание изображения 2}
+    \label{fig:image7}
+\end{figure}
+В графе представлены средние значения метрик за 5 запусков, были взяты данные из 16000 задач и 40 процессоров. На основе полученных данных можно понять, 
+что параллельный алгоритм работает многократно дольше последовательной версии, однако имеет значимый прирост производительности.
 \end{document}
