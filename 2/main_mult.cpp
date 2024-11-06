@@ -21,7 +21,7 @@ public:
 };
 
 std::shared_ptr<Solution> globalBestSolution;
-std::mutex globalMutex;
+// std::mutex globalMutex;
 
 class MutationOperation {
 public:
@@ -61,7 +61,7 @@ public:
         return cloned;
     }
 
-    std::shared_ptr<Solution> clone() const override { // Реализация метода clone()
+    std::shared_ptr<Solution> clone() const override { 
         return std::make_shared<SchedulingSolution>(*this);
     }
 
@@ -242,12 +242,11 @@ int main(int argc, char *argv[]) {
 
         int globalNoImprovementCount = 0;
 
-        {
-            std::lock_guard<std::mutex> lock(globalMutex);
-            if (!globalBestSolution) {
-                globalBestSolution = std::make_shared<SchedulingSolution>(numJobs, numProcessors, jobDurations, std::chrono::system_clock::now().time_since_epoch().count());
-            }
+        
+        if (!globalBestSolution) {
+            globalBestSolution = std::make_shared<SchedulingSolution>(numJobs, numProcessors, jobDurations, std::chrono::system_clock::now().time_since_epoch().count());
         }
+        
 
         while (globalNoImprovementCount < maxGlobalNoImprovementCount) {
             std::vector<std::thread> threads;
@@ -258,10 +257,9 @@ int main(int argc, char *argv[]) {
                     unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count() + i;
                     std::shared_ptr<Solution> initialSolution;
 
-                    {
-                        std::lock_guard<std::mutex> lock(globalMutex);
-                        initialSolution = globalBestSolution->cloneWithNewSeed(seed);
-                    }
+                    
+                    initialSolution = globalBestSolution->cloneWithNewSeed(seed);
+                    
 
                     ParallelSimulatedAnnealing sa(initialSolution.get(), &mutationOperation, &coolingSchedule, initialTemperature, maxNoImprovementCount, i, seed);
                     sa.run();
@@ -277,7 +275,7 @@ int main(int argc, char *argv[]) {
             bool improved = false;
             for (const auto &localBest : localBestSolutions) {
                 if (localBest->getCost() < globalBestSolution->getCost()) {
-                    std::lock_guard<std::mutex> lock(globalMutex);
+                    // std::lock_guard<std::mutex> lock(globalMutex);
                     globalBestSolution = localBest;
                     // std::cout << "Found Improved Solution" << std::endl;
                     improved = true;
@@ -290,7 +288,7 @@ int main(int argc, char *argv[]) {
                 globalNoImprovementCount++;
             }
 
-            // std::cout << "Current best solution cost: " << globalBestSolution->getCost() << std::endl;
+            std::cout << "Current best solution cost: " << globalBestSolution->getCost() << std::endl;
         }
         std::cout << "Current best solution cost: " << globalBestSolution->getCost() << std::endl;
     } catch (const std::exception &e) {
