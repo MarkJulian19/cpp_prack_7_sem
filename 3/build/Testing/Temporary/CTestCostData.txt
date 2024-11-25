@@ -1,0 +1,5 @@
+FunctionCreationTest.CreateBasicFunctions 2 0.00537151
+FunctionOperatorTest.ArithmeticOperations 2 0.00247088
+FunctionDerivativeTest.DerivativeCalculation 2 0.00210212
+GradientDescentTest.FindRoot 2 0.00116371
+---

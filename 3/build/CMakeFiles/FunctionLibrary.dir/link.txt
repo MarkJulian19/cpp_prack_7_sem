@@ -1,0 +1,2 @@
+/usr/bin/ar qc libFunctionLibrary.a CMakeFiles/FunctionLibrary.dir/TFunction.cpp.o CMakeFiles/FunctionLibrary.dir/IdentFunc.cpp.o CMakeFiles/FunctionLibrary.dir/ConstFunc.cpp.o CMakeFiles/FunctionLibrary.dir/PowerFunc.cpp.o CMakeFiles/FunctionLibrary.dir/ExpFunc.cpp.o CMakeFiles/FunctionLibrary.dir/PolynomialFunc.cpp.o CMakeFiles/FunctionLibrary.dir/FunctionFactory.cpp.o CMakeFiles/FunctionLibrary.dir/Operators.cpp.o CMakeFiles/FunctionLibrary.dir/GradientDescent.cpp.o
+/usr/bin/ranlib libFunctionLibrary.a

@@ -1,0 +1,111 @@
+Start testing: Nov 16 23:23 MSK
+----------------------------------------------------------
+1/4 Testing: FunctionCreationTest.CreateBasicFunctions
+1/4 Test: FunctionCreationTest.CreateBasicFunctions
+Command: "/home/ubuntu-admin/cpp_prack_7_sem/3/build/FunctionTest" "--gtest_filter=FunctionCreationTest.CreateBasicFunctions" "--gtest_also_run_disabled_tests"
+Directory: /home/ubuntu-admin/cpp_prack_7_sem/3/build
+"FunctionCreationTest.CreateBasicFunctions" start time: Nov 16 23:23 MSK
+Output:
+----------------------------------------------------------
+Running main() from /home/ubuntu-admin/cpp_prack_7_sem/3/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = FunctionCreationTest.CreateBasicFunctions
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from FunctionCreationTest
+[ RUN      ] FunctionCreationTest.CreateBasicFunctions
+[       OK ] FunctionCreationTest.CreateBasicFunctions (0 ms)
+[----------] 1 test from FunctionCreationTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"FunctionCreationTest.CreateBasicFunctions" end time: Nov 16 23:23 MSK
+"FunctionCreationTest.CreateBasicFunctions" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/4 Testing: FunctionOperatorTest.ArithmeticOperations
+2/4 Test: FunctionOperatorTest.ArithmeticOperations
+Command: "/home/ubuntu-admin/cpp_prack_7_sem/3/build/FunctionTest" "--gtest_filter=FunctionOperatorTest.ArithmeticOperations" "--gtest_also_run_disabled_tests"
+Directory: /home/ubuntu-admin/cpp_prack_7_sem/3/build
+"FunctionOperatorTest.ArithmeticOperations" start time: Nov 16 23:23 MSK
+Output:
+----------------------------------------------------------
+Running main() from /home/ubuntu-admin/cpp_prack_7_sem/3/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = FunctionOperatorTest.ArithmeticOperations
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from FunctionOperatorTest
+[ RUN      ] FunctionOperatorTest.ArithmeticOperations
+[       OK ] FunctionOperatorTest.ArithmeticOperations (0 ms)
+[----------] 1 test from FunctionOperatorTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"FunctionOperatorTest.ArithmeticOperations" end time: Nov 16 23:23 MSK
+"FunctionOperatorTest.ArithmeticOperations" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/4 Testing: FunctionDerivativeTest.DerivativeCalculation
+3/4 Test: FunctionDerivativeTest.DerivativeCalculation
+Command: "/home/ubuntu-admin/cpp_prack_7_sem/3/build/FunctionTest" "--gtest_filter=FunctionDerivativeTest.DerivativeCalculation" "--gtest_also_run_disabled_tests"
+Directory: /home/ubuntu-admin/cpp_prack_7_sem/3/build
+"FunctionDerivativeTest.DerivativeCalculation" start time: Nov 16 23:23 MSK
+Output:
+----------------------------------------------------------
+Running main() from /home/ubuntu-admin/cpp_prack_7_sem/3/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = FunctionDerivativeTest.DerivativeCalculation
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from FunctionDerivativeTest
+[ RUN      ] FunctionDerivativeTest.DerivativeCalculation
+[       OK ] FunctionDerivativeTest.DerivativeCalculation (0 ms)
+[----------] 1 test from FunctionDerivativeTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"FunctionDerivativeTest.DerivativeCalculation" end time: Nov 16 23:23 MSK
+"FunctionDerivativeTest.DerivativeCalculation" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/4 Testing: GradientDescentTest.FindRoot
+4/4 Test: GradientDescentTest.FindRoot
+Command: "/home/ubuntu-admin/cpp_prack_7_sem/3/build/FunctionTest" "--gtest_filter=GradientDescentTest.FindRoot" "--gtest_also_run_disabled_tests"
+Directory: /home/ubuntu-admin/cpp_prack_7_sem/3/build
+"GradientDescentTest.FindRoot" start time: Nov 16 23:23 MSK
+Output:
+----------------------------------------------------------
+Running main() from /home/ubuntu-admin/cpp_prack_7_sem/3/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = GradientDescentTest.FindRoot
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from GradientDescentTest
+[ RUN      ] GradientDescentTest.FindRoot
+[       OK ] GradientDescentTest.FindRoot (0 ms)
+[----------] 1 test from GradientDescentTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"GradientDescentTest.FindRoot" end time: Nov 16 23:23 MSK
+"GradientDescentTest.FindRoot" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 16 23:23 MSK

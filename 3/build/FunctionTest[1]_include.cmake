@@ -1,0 +1,5 @@
+if(EXISTS "/home/ubuntu-admin/cpp_prack_7_sem/3/build/FunctionTest[1]_tests.cmake")
+  include("/home/ubuntu-admin/cpp_prack_7_sem/3/build/FunctionTest[1]_tests.cmake")
+else()
+  add_test(FunctionTest_NOT_BUILT FunctionTest_NOT_BUILT)
+endif()
